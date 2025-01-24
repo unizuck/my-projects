@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Namoro</title>
+    <style>
+        body {
+            background-color: #ffb6c1; /* Fundo rosa */
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h1 {
+            color: #ff1493; /* Rosa escuro */
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff1493;
+        }
+
+        .question, .answers {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="startScreen">
+        <h1>Vamos ver se vocês se conhecem!</h1>
+        <input type="text" id="nomeNamorada" placeholder="Nome da namorada">
+        <input type="text" id="nomeNamorado" placeholder="Nome do namorado">
+        <button onclick="startQuiz()">Começar</button>
+    </div>
+
+    <div class="container question" id="quizScreen">
+        <h2 id="pergunta"></h2>
+        <input type="text" id="resposta" placeholder="Sua resposta">
+        <button onclick="submitAnswer()">Concluído</button>
+
+        <div class="result" id="result"></div>
+        <button class="answers" id="nextQuestion" onclick="nextQuestion()">Próxima pergunta</button>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let currentQuestionIndex = 0;
+        let questions = [
+            "Qual é a comida favorita dele(a)?",
+            "Qual é o filme favorito dele(a)?",
+            "Qual é a cor favorita dele(a)?",
+            "Qual é a bebida favorita dele(a)?",
+            "Qual é o cantor favorito dele(a)?",
+            "Qual é a música favorita dele(a)?",
+            "Qual foi o melhor dia dele(a)?",
+            "Qual é o hobbie favorito dele(a)?",
+            "Qual é o sonho dele(a)?",
+            "Onde se conheceram?",
+            "Como seria um dia perfeito para ele(a)?"
+        ];
+
+        let answers = {
+            namorado: [],
+            namorada: []
+        };
+
+        let currentPlayer = "namorado";
+        let nomeNamorada = '';
+        let nomeNamorado = '';
+
+        function startQuiz() {
+            // Pega os nomes
+            nomeNamorada = document.getElementById("nomeNamorada").value.trim();
+            nomeNamorado = document.getElementById("nomeNamorado").value.trim();
+
+            // Validação simples
+            if (nomeNamorada === '' || nomeNamorado === '') {
+                alert('Por favor, preencha ambos os nomes!');
+                return;
+            }
+
+            // Esconde a tela de início e mostra a primeira pergunta
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("quizScreen").style.display = "block";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            document.getElementById("pergunta").innerText = `${questions[currentQuestionIndex]} (${currentPlayer === 'namorado' ? nomeNamorado : nomeNamorada})`;
+            document.getElementById("resposta").value = ''; // Limpa a resposta anterior
+            document.getElementById("result").innerHTML = ''; // Limpa a área de resultado
+        }
+
+        function submitAnswer() {
+            let resposta = document.getElementById("resposta").value.trim();
+            
+            if (resposta === '') {
+                alert('Por favor, insira sua resposta!');
+                return;
+            }
+
+            // Armazena a resposta
+            if (currentPlayer === 'namorado') {
+                answers.namorado.push(resposta);
+                currentPlayer = 'namorada'; // Alterna para a namorada
+            } else {
+                answers.namorada.push(resposta);
+                currentPlayer = 'namorado'; // Alterna para o namorado
+            }
+
+            // Se ambos já responderam, mostra as respostas e permite seguir
+            if (answers.namorado.length === answers.namorada.length) {
+                document.getElementById("result").innerHTML = `
+                    <strong>Respostas:</strong><br>
+                    <strong>${nomeNamorado}:</strong> ${answers.namorado[currentQuestionIndex]}<br>
+                    <strong>${nomeNamorada}:</strong> ${answers.namorada[currentQuestionIndex]}
+                `;
+                document.getElementById("nextQuestion").style.display = 'block';
+            } else {
+                showQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            // Passa para a próxima pergunta
+            currentQuestionIndex++;
+
+            // Verifica se ainda há perguntas
+            if (currentQuestionIndex < questions.length) {
+                document.getElementById("nextQuestion").style.display = 'none'; // Oculta o botão de próxima pergunta
+                showQuestion();
+            } else {
+                // Fim do quiz
+                document.getElementById("quizScreen").innerHTML = `<h2>Parabéns! Vocês concluíram o quiz!</h2>`;
+            }
+        }
+    </script>
+</body>
+</html>

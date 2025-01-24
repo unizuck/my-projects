@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagem para Minha Princesa</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            transition: background-color 0.3s ease, background-image 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80%;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #ff1493;
+        }
+
+        .mensagem {
+            font-size: 24px;
+            color: #ff1493;
+            margin-top: 20px;
+        }
+
+        .mensagem span {
+            font-size: 48px;
+        }
+
+        /* Animação de erro */
+        .error {
+            background-color: red !important;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        /* Estilo da janelinha e do gato */
+        .cat-container {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 200px;
+            height: 100px;
+            background-color: #fff;
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+            display: none; /* Inicialmente invisível */
+            align-items: center;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+
+        .cat {
+            font-size: 30px;
+            margin-right: 10px;
+        }
+
+        .line {
+            width: 0;
+            height: 2px;
+            background-color: #ff69b4;
+            margin-top: 20px;
+            transition: width 2s linear;
+        }
+
+        .love-message-small {
+            display: none;
+            font-size: 18px;
+            color: #ff1493;
+            margin-top: 10px;
+        }
+
+        /* Mostra o contêiner do gato e a linha animada */
+        .show-cat .cat-container {
+            display: flex;
+        }
+
+        .show-line .line {
+            width: 100%; /* A linha se estende completamente */
+        }
+
+        .show-love-message-small .love-message-small {
+            display: block; /* Mostra o "I LOVE YOU" pequeno após a linha */
+        }
+
+        /* Novo estilo para o fundo quando a resposta estiver correta */
+        .correct {
+            background-color: pink !important;
+            background-image: url('image.png'); /* Caminho atualizado da imagem */
+            background-size: cover;
+            background-position: center;
+            transition: background-color 0.5s ease, background-image 0.5s ease;
+        }
+
+        /* Fundo vermelho ao errar */
+        .incorrect {
+            background-color: red !important;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Transição de volta para "Tenta de novo" */
+        .try-again {
+            background-color: white !important;
+            transition: background-color 0.5s ease;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <h1>Escreva o nome da minha princesa</h1>
+        <input type="text" id="nome" placeholder="Digite o nome">
+        <br>
+        <button onclick="verificarNome()">Enviar</button>
+        <div id="mensagem"></div>
+    </div>
+
+    <!-- Janelinha do gato -->
+    <div class="cat-container" id="catContainer">
+        <div class="cat">🐱</div>
+        <div>
+            <div class="line" id="line"></div>
+            <div class="love-message-small" id="loveMessageSmall">I LOVE YOU</div>
+        </div>
+    </div>
+
+    <script>
+        function verificarNome() {
+            var nome = document.getElementById('nome').value.trim().toLowerCase();
+            var mensagemDiv = document.getElementById('mensagem');
+            var containerDiv = document.getElementById('container');
+            var body = document.body;
+            var catContainer = document.getElementById('catContainer');
+            var line = document.getElementById('line');
+            var loveMessageSmall = document.getElementById('loveMessageSmall');
+
+            // Nomes aceitos: rafa e Rafa (não faz diferença maiúsculas/minúsculas)
+            if (nome === 'Rafa' || nome === 'rafa') {
+                mensagemDiv.innerHTML = '<span>❤️</span><br><p>Eu te amo minha princesa, você é a pessoa mais especial para mim, não há nada nesse mundo que poderá nos separar, pois o meu amor por ti é eterno.</p>';
+                containerDiv.classList.remove('error'); // Remove o efeito de erro
+                body.classList.remove('incorrect'); // Remove o fundo vermelho ao errar
+                body.classList.remove('try-again'); // Remove "Tenta de novo"
+                body.classList.add('correct'); // Adiciona o fundo rosa com o coração
+
+                // Exibe o contêiner do gato
+                catContainer.style.display = 'flex';
+                
+                // Anima a linha sendo traçada pelo gato
+                setTimeout(function() {
+                    line.style.width = '100%';
+                }, 500); // Inicia a linha após meio segundo
+
+                // Exibe o "I LOVE YOU" depois que a linha é desenhada
+                setTimeout(function() {
+                    loveMessageSmall.style.display = 'block';
+                }, 2500); // Mostra o "I LOVE YOU" depois de 2,5 segundos
+            } else {
+                mensagemDiv.innerHTML = '<p>ERRADO! Só existe uma princesa para o meu coração, e não é essa!</p>';
+                containerDiv.classList.add('error'); // Aplica a classe de erro
+                body.classList.remove('correct'); // Remove o fundo rosa com o coração
+                body.classList.add('incorrect'); // Muda o fundo para vermelho
+
+                setTimeout(function() {
+                    body.classList.remove('incorrect');
+                    body.classList.add('try-again');
+                    mensagemDiv.innerHTML = '<p>Tenta de novo!</p>'; // Mensagem de tentativa
+                }, 1000); // Após 1 segundo, volta ao branco com "Tenta de novo"
+
+                // Reseta a linha e a mensagem pequena
+                line.style.width = '0';
+                loveMessageSmall.style.display = 'none';
+                catContainer.style.display = 'none'; // Oculta o gato ao errar
+            }
+        }
+    </script>
+</body>
+</html>
